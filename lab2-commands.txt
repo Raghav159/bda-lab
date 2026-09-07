@@ -10,6 +10,24 @@ hadoop@namenode:~$ hdfs dfs -mkdir -p /user/student
 hadoop@namenode:~$ hdfs dfs -ls /user
 # drwxr-xr-x ... /user/student
 
+!!! java and nano download
+
+docker compose exec -u 0 namenode bash 
+
+sed -i 's|^mirrorlist=|#mirrorlist=|g' /etc/yum.repos.d/CentOS-Base.repo
+
+sed -i 's|^#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Base.repo
+
+yum clean all
+
+yum install -y java-1.8.0-openjdk-devel
+
+yum install nano -y
+
+exit
+
+docker compose exec namenode bash
+
 hadoop@namenode:~$ nano HdfsDemo.java
 
 hadoop@namenode:~$ export HADOOP_CLASSPATH=$(hadoop classpath)
