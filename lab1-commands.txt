@@ -1,0 +1,41 @@
+PS> cd C:\bda-labs
+PS> mkdir lab1-wordcount
+PS> cd lab1-wordcount
+# start a Hadoop container that stays running, named "hadoop"
+PS> docker run -dit --name hadoop apache/hadoop:3.3.6 bash
+
+PS> docker exec -it hadoop bash
+# your prompt changes — you are now INSIDE the container:
+hadoop@a1b2c3:~$
+
+hadoop@a1b2c3:~$ nano WordCount.java
+
+hadoop@a1b2c3:~$ mkdir input
+hadoop@a1b2c3:~$ echo "the quick brown fox the lazy dog the fox" > input/file1.txt
+hadoop@a1b2c3:~$ echo "a quick dog and a brown fox jumped" > input/file2.txt
+
+!!! installing java 
+docker exec -u 0 -it hadoop bash
+sed -i 's|^mirrorlist=|#mirrorlist=|g' /etc/yum.repos.d/CentOS-Base.repo
+sed -i 's|^#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Base.repo
+yum clean all
+yum install -y java-1.8.0-openjdk-devel
+javac -version
+exit
+ OR 
+yum clean all
+yum install -y java-1.8.0-openjdk-devel
+javac -version
+exit
+
+hadoop@a1b2c3:~$ export HADOOP_CLASSPATH=$(hadoop classpath)
+hadoop@a1b2c3:~$ mkdir classes
+hadoop@a1b2c3:~$ javac -classpath $HADOOP_CLASSPATH -d classes WordCount.java
+hadoop@a1b2c3:~$ jar -cvf wordcount.jar -C classes .
+
+hadoop@a1b2c3:~$ hadoop jar wordcount.jar WordCount input output
+
+hadoop@a1b2c3:~$ cat output/part-r-00000
+
+hadoop@a1b2c3:~$ exit
+PS> docker rm -f hadoop
