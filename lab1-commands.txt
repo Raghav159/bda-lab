@@ -28,6 +28,9 @@ yum install -y java-1.8.0-openjdk-devel
 javac -version
 exit
 
+!!! installing nano
+yum install nano -y    //inside the root
+
 hadoop@a1b2c3:~$ export HADOOP_CLASSPATH=$(hadoop classpath)
 hadoop@a1b2c3:~$ mkdir classes
 hadoop@a1b2c3:~$ javac -classpath $HADOOP_CLASSPATH -d classes WordCount.java
