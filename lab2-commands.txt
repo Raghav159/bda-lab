@@ -1,0 +1,26 @@
+PS> cd C:\bda-labs
+PS> mkdir lab2-hdfs
+PS> cd lab2-hdfs
+PS> notepad docker-compose.yml
+
+PS> docker compose up -d
+# wait ~15 seconds for the NameNode and DataNode to start
+PS> docker compose exec namenode bash
+hadoop@namenode:~$ hdfs dfs -mkdir -p /user/student
+hadoop@namenode:~$ hdfs dfs -ls /user
+# drwxr-xr-x ... /user/student
+
+hadoop@namenode:~$ nano HdfsDemo.java
+
+hadoop@namenode:~$ export HADOOP_CLASSPATH=$(hadoop classpath)
+hadoop@namenode:~$ mkdir classes
+hadoop@namenode:~$ javac -classpath $HADOOP_CLASSPATH -d classes HdfsDemo.java
+hadoop@namenode:~$ jar -cvf hdfsdemo.jar -C classes .
+
+hadoop@namenode:~$ hadoop jar hdfsdemo.jar HdfsDemo
+
+hadoop@namenode:~$ echo "hello hdfs" | hdfs dfs -put - /user/student/notes.txt
+hadoop@namenode:~$ hadoop jar hdfsdemo.jar HdfsDemo
+
+hadoop@namenode:~$ exit
+PS> docker compose down
